@@ -1,5 +1,5 @@
 # Lazynite
-A PC remote controller for YouTube and Twitch
+A PC remote controller for YouTube and Twitch.
 
 ## Requirements
 - A Linux distro;
@@ -33,3 +33,6 @@ $ python3 lazynite
 Enter phone number or bot token: my_api_token12345
 Is "my_api_token12345" correct? (y/N): y
 ```
+
+## License
+MIT
