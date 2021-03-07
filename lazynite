@@ -1,0 +1,151 @@
+#!/bin/python3
+
+import os
+
+from pyrogram import Client, filters
+from pyrogram.types import ReplyKeyboardMarkup
+
+
+USERNAME = 'alessiocelentano'
+BROWSER = 'chromium'
+current_site = {'twitch': False}
+app = Client("lazynite")
+
+
+@app.on_message(filters.command('start'))
+def start(app, message):
+    if message.from_user.username == USERNAME:
+        reply_markup = ReplyKeyboardMarkup (
+            [
+                ['🔊 Volume +', '🔴 YouTube'],
+                ['🔉 Volume -', '🟣 Twitch'],
+                ['🔇 Mute', '🖥 Fullscreen'],
+                ['❌ Shutdown']
+            ]
+        )
+        app.send_message(
+            chat_id=message.chat.id,
+            text='Keyboard setted: Home ✅',
+            reply_markup=reply_markup
+        )
+
+
+@app.on_message()
+def main(app, message):
+    if message.from_user.username == USERNAME:
+        # Audio
+        # 0: speaker | 1: Headphones | 2: Other (Bluetooth headphones, external speaker, etc...)
+        # Add/Remove lines with index that you don't need
+        if message.text == '🔊 Volume +':
+            os.system('pactl set-sink-volume 0 +10%')
+            os.system('pactl set-sink-volume 1 +10%')
+            os.system('pactl set-sink-volume 2 +10%')
+        elif message.text == '🔉 Volume -':
+            os.system('pactl set-sink-volume 0 -10%')
+            os.system('pactl set-sink-volume 1 -10%')
+            os.system('pactl set-sink-volume 2 -10%')
+        elif message.text == '🔇 Mute':
+            os.system('pactl set-sink-mute 0 toggle')
+            os.system('pactl set-sink-mute 1 toggle')
+            os.system('pactl set-sink-mute 2 toggle')
+        # YouTube
+        elif message.text == '🔴 YouTube':
+            youtube(app, message)
+        elif message.text == '🏠 Home':
+            current_site['twitch'] = False
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} youtube.com')
+        elif message.text == '🔥 Trending':
+            current_site['twitch'] = False
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} youtube.com/feed/trending')
+        elif message.text == '📫 Subscription':
+            current_site['twitch'] = False
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} youtube.com/feed/subscriptions')
+        elif message.text == '📚 Library':
+            current_site['twitch'] = False
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} youtube.com/feed/library')
+        elif message.text == '⬆️ Scroll Up':
+            for i in range(3):
+                os.system('xdotool key Shift+Tab')
+        elif message.text == '⬇️ Scroll Down':
+            for i in range(3):
+                os.system('xdotool key Tab')
+        elif message.text == '⬇️ Super Scroll Down':
+            for i in range(15):
+                os.system('xdotool key Tab')
+        elif message.text == '⬆️ Super Scroll Up':
+            for i in range(15):
+                os.system('xdotool key Shift+Tab')
+        elif message.text == '🛠 Fix focus':
+            os.system('xdotool key Tab')
+        elif message.text =='🖥 Video Fullscreen':
+            os.system('xdotool key f')
+        elif message.text == '↩️ Enter':
+            os.system('xdotool key Return')
+        elif message.text == '🔙 Back':
+            start(app, message)
+        # Twitch
+        elif message.text == '🟣 Twitch':
+            twitch(app, message)
+        elif message.text == '🟣 Home':
+            current_site['twitch'] = True
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} twitch.tv')
+        elif message.text == '🔍 Zoom +':
+            os.system('xdotool key ctrl+plus')
+        elif message.text == '🔍 Zoom -':
+            os.system('xdotool key ctrl+minus')
+        elif message.text == '👁‍🗨 Theatre Mode':
+            os.system('xdotool key alt+t')
+        # PC
+        elif message.text == '🖥 Fullscreen':
+            os.system('xdotool key F11')
+        elif message.text == '❌ Shutdown':
+            os.system('shutdown now')
+        elif current_site['twitch'] == True:
+            os.system('xdotool key ctrl+w')
+            os.system(f'{BROWSER} twitch.tv/{message.text}')
+
+def youtube(app, message):
+    reply_markup = ReplyKeyboardMarkup(
+        [
+            ['🏠 Home', '🔥 Trending'],
+            ['📫 Subscription', '📚 Library'],
+            ['⬆️ Scroll Up', '⬆️ Super Scroll Up'],
+            ['⬇️ Scroll Down', '⬇️ Super Scroll Down'],
+            ['🛠 Fix focus'],
+            ['🖥 Video Fullscreen'],
+            ['↩️ Enter'],
+            ['🔙 Back']
+        ]
+    )
+    app.send_message(
+        chat_id=message.chat.id,
+        text='Keyboard setted: Youtube ✅',
+        reply_markup=reply_markup
+    )
+
+
+def twitch(app, message):
+    reply_markup = ReplyKeyboardMarkup(
+        [
+            ['🟣 Home'],
+            ['🔍 Zoom +', '🔍 Zoom -'],
+            ['👁‍🗨 Theatre Mode', '🖥 Video Fullscreen'],
+            ['🔙 Back']
+        ]
+    )
+    app.send_message(
+        chat_id=message.chat.id,
+        text='Keyboard setted: Twitch ✅\n Type a channel name for display the stream',
+        reply_markup=reply_markup
+    )
+
+
+if __name__ == '__main__':
+    current_site['twitch'] = False
+    app.run()
+
