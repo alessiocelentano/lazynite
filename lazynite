@@ -1,15 +1,28 @@
 #!/bin/python3
 
 import os
+from configparser import ConfigParser
 
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup
 
 
-USERNAME = 'alessiocelentano'
-BROWSER = 'chromium'
 current_site = {'twitch': False}
-app = Client("lazynite")
+config = ConfigParser()
+config.read('config.ini')
+
+API_ID = config.get('pyrogram', 'api_id')
+API_HASH = config.get('pyrogram', 'api_hash')
+TOKEN = config.get('pyrogram', 'token')
+USERNAME = config.get('pyrogram', 'username')
+BROWSER = config.get('pyrogram', 'browser')
+
+app = Client(
+    session_name='lazynite',
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN
+)
 
 
 @app.on_message(filters.command('start'))
@@ -146,6 +159,5 @@ def twitch(app, message):
 
 
 if __name__ == '__main__':
-    current_site['twitch'] = False
     app.run()
 
