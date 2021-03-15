@@ -94,6 +94,10 @@ def main(app, message):
                 os.system('xdotool key Shift+Tab')
         elif message.text == '🛠 Fix focus':
             os.system('xdotool key Tab')
+        elif message.text == '↩️ 5 sec -':
+            os.system('xdotool key Left')
+        elif message.text == '↪️ 5 sec +':
+            os.system('xdotool key Right')
         elif message.text =='🖥 Video Fullscreen':
             os.system('xdotool key f')
         elif message.text == '↩️ Enter':
@@ -130,6 +134,7 @@ def youtube(app, message):
             ['⬆️ Scroll Up', '⬆️ Super Scroll Up'],
             ['⬇️ Scroll Down', '⬇️ Super Scroll Down'],
             ['🛠 Fix focus'],
+            ['↩️ 5 sec -', '↪️ 5 sec +'],
             ['🖥 Video Fullscreen'],
             ['↩️ Enter'],
             ['🔙 Back']
