@@ -25,7 +25,7 @@ Makefile will ask for these data and it will complete the configuration for you.
 
 
 ```
-$ git clone https://github.com/alessiocelentano/lazynite
+$ git clone https://github.com/Nastybox/lazynite
 $ cd lazynite
 $ make
 $ ./lazynite
